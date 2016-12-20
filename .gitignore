@@ -2,5 +2,6 @@ MODELS/
 .python-version
 Wikipedia_TEXT/
 fastText/
-TEXT/
+TEXTS/
 twitter/secret.json
+secret.json
