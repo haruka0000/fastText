@@ -21,7 +21,7 @@ api = tweepy.API(auth)
 print('Done!')
 
 def search(word1, word2):
-  txt = word1 + " " + word2 + ' min_faves:10'
+  txt = word1 + " " + word2 + ' min_faves:20'
   search_result = api.search(q=txt, count=200)
   result = search_result
   print(api.rate_limit_status()['resources']['search']['/search/tweets'])
