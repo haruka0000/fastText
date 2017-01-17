@@ -24,7 +24,7 @@ def search(word1, word2):
   txt = word1 + " " + word2 + ' min_faves:20'
   search_result = api.search(q=txt, count=200)
   result = search_result
-  #print(api.rate_limit_status()['resources']['search']['/search/tweets'])
+  print(api.rate_limit_status()['resources']['search']['/search/tweets'])
   return result
 
 if __name__ == "__main__":
