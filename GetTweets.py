@@ -21,14 +21,33 @@ api = tweepy.API(auth)
 print('Done!')
 
 def search(word1, word2):
-  txt = word1 + " " + word2 + ' min_faves:20'
+  search_template =  '-http -https -# -「  min_faves:30'
+  txt = word1 + " " + word2 + search_template
   search_result = api.search(q=txt, count=200)
-  result = search_result
-  print(api.rate_limit_status()['resources']['search']['/search/tweets'])
-  return result
+  if search_result == []:
+    txt = word2 + search_template
+    search_result = api.search(q=txt, count=200)
+    if search_result != []:
+      result = search_result
+    else:
+      result = None
+  else:
+    result = search_result
+
+  if result != None:
+    message = result[0].text
+    for r in result:
+      if "？" in r.text:
+        message = r.text
+  else:
+    message = "ちょっとよくわからないな。"
+
+  #print(api.rate_limit_status()['resources']['search']['/search/tweets'])
+  return message
 
 if __name__ == "__main__":
   word1 = input("word 1 >>")
   word2 = input("word 2 >>")
-  for s in search(word1, word2):
-    print(s.text)
+  print(search(word1, word2))
+  #for s in search(word1, word2):
+    #print(s.text)
