@@ -1,13 +1,21 @@
 from gensim.models import word2vec
 import GetTweets as GT
 import TextDivider as TD
+from datetime import datetime
+import MakeHtml as MH
 
 global model
 
-def responce(file_name): 
+def responce(file_name, log_name): 
   # 学習済みモデルのロード
   model = word2vec.Word2Vec.load_word2vec_format(file_name, binary=False)
+  
   input_text = input("You >>")
+  
+  f = open(log_name,'w')
+  f.write("You,System;\n")
+  f.write(input_text + ",")
+
   start = TD.getNoun(input_text)
   A = start
   goal = "徳島"
@@ -38,16 +46,28 @@ def responce(file_name):
     print("「" + intention_list[0][0] + "」")
     '''
     tweet_text = GT.search(A[0], " ")
-    print(tweet_text)
-    print("そういえば、")
-    tweet_text = GT.search(A[0], intention_list[0][0])
-    print(tweet_text)
+    print("\nSystem >>")
+    tweet_text = tweet_text + "\nそういえば、" + GT.search(A[0], intention_list[0][0])
+    print(tweet_text + "\n")
+    f.write(tweet_text + ";\n")
 
     input_text = input("You >>")
+    f.write(input_text + ",")
+
+    if input_text == "さようなら":
+      print("\nSystem >>さようなら")
+      f.write("さようなら;\n")
+      break
+    
     A = TD.getNoun(input_text)
+  f.close()
 
   
 
 if __name__=='__main__':
-  file_name = "./MODELS/model_300.vec" 
-  responce(file_name)
+  now_time = datetime.now().strftime('%Y%m%d%H%M%S')
+  file_name = "./MODELS/model_300.vec"
+  log_name = "./LOG/" + now_time + ".log"
+  html_name = "./LOG/design/" + now_time + ".html"
+  responce(file_name, log_name)
+  MH.LogToHtml(log_name, html_name)
