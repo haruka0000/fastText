@@ -1,8 +1,8 @@
 from gensim.models import word2vec
-import GetTweets as GT
-import TextDivider as TD
+import Twitter as Tw
+import Phrase
 from datetime import datetime
-import MakeHtml as MH
+import Html
 
 global model
 
@@ -16,7 +16,7 @@ def responce(file_name, log_name):
   f.write("You,System;\n")
   f.write(input_text + ",")
 
-  start = TD.getNoun(input_text)
+  start = Phrase.getNoun(input_text)
   A = start
   goal = "徳島"
   #B = goal
@@ -45,21 +45,49 @@ def responce(file_name, log_name):
     print("=======================================================")
     print("「" + intention_list[0][0] + "」")
     '''
-    tweet_text = GT.search(A[0], " ")
-    print("\nSystem >>")
-    tweet_text = tweet_text + "\nそういえば、" + GT.search(A[0], intention_list[0][0])
-    print(tweet_text + "\n")
-    f.write(tweet_text + ";\n")
+    count = 0
+    resp_msgs = Tw.getList(A[0], " ")
+    exp_msgs = Tw.getList(A[0], intention_list[0][0])
 
-    input_text = input("You >>")
-    f.write(input_text + ",")
+    while input_text != "さようなら。":
+      if count >= len(resp_msgs) or count >= len(exp_msgs):
+        output_msg = "他の話をしませんか。"
+      else:
+        if isinstance(resp_msgs, str):
+          resp_msg = resp_msgs
+        else:
+          resp_msg = resp_msgs[count]
+        if isinstance(resp_msgs, str):
+          exp_msg = exp_msgs
+        else:
+          exp_msg = exp_msgs[count]
+        output_msg = resp_msg + "\nそういえば、" + exp_msg
+      
+      print("\nSystem >>")
+      print(output_msg + "\n")
+      f.write(output_msg + ";\n")
 
-    if input_text == "さようなら":
-      print("\nSystem >>さようなら")
-      f.write("さようなら;\n")
+      input_text = input("You >>")
+      f.write(input_text + ",")
+      
+      old_A = A
+      A = Phrase.getNoun(input_text)
+      if A != None:
+        break
+      count = count + 1
+
+
+    if input_text == "さようなら。":
+      print("\nSystem >>さようなら。")
+      f.write("さようなら。;\n")
       break
     
-    A = TD.getNoun(input_text)
+    old_A = A
+    A = Phrase.getNoun(input_text)
+    if A == None:
+      A = old_A
+      
+
   f.close()
 
   
@@ -70,4 +98,4 @@ if __name__=='__main__':
   log_name = "./LOG/" + now_time + ".log"
   html_name = "./LOG/design/" + now_time + ".html"
   responce(file_name, log_name)
-  MH.LogToHtml(log_name, html_name)
+  Html.LogToHtml(log_name, html_name)

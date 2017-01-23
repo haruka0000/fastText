@@ -15,24 +15,27 @@ def getNoun(s):
     tmp = l.split("\t")
     words_dict[tmp[0]] = tmp[3]
   #print(words_dict)
+
   nouns_dict = {}
   # 名詞のみ抽出
   for word,word_class in words_dict.items():
     if "名詞" in word_class:
       nouns_dict[word] = word_class
   #print(nouns_dict)
-
-  proper_nouns_dict = {}
-  for noun,noun_detail in nouns_dict.items():
-    if "固有名詞" in noun_detail:
-      proper_nouns_dict[noun] = noun_detail
-  #print(proper_nouns_dict)
+  if nouns_dict != {}:
+    proper_nouns_dict = {}
+    for noun,noun_detail in nouns_dict.items():
+      if "固有名詞" in noun_detail:
+        proper_nouns_dict[noun] = noun_detail
+    #print(proper_nouns_dict)
   
-  input_nouns = []
-  if proper_nouns_dict!= {}:
-    input_nouns = list(proper_nouns_dict.keys())
+    input_nouns = []
+    if proper_nouns_dict!= {}:
+      input_nouns = list(proper_nouns_dict.keys())
+    else:
+      input_nouns = list(nouns_dict.keys())[::-1]
   else:
-    input_nouns = list(nouns_dict.keys())
+    input_nouns = None
   return input_nouns
 
 if __name__ == '__main__':
