@@ -3,6 +3,7 @@ import Twitter as Tw
 import Phrase
 from datetime import datetime
 import Html
+import WordCalc
 
 global model
 
@@ -16,77 +17,66 @@ def responce(file_name, log_name):
   f.write("You,System;\n")
   f.write(input_text + ",")
 
-  start = Phrase.getNoun(input_text)
-  A = start
-  goal = "徳島"
-  #B = goal
+  input_words = Phrase.getNoun(input_text)
 
+  words_memory = []
+  for word in input_words:
+    words_memory.append(word)
+    
+  count = 0
   while True:
-    intention_list = []
+    intention_words = []
+    print(words_memory)
+    try:
+      intention_words =  WordCalc.intention_calc(model, words_memory)
 
-    # Aの類似語を集める　類似度順にソート
-    similar_words = model.most_similar(positive=A, negative=[], topn=100)
-    similar_words.sort(key=lambda x: float(x[1]), reverse=True)
-    
-    #similar_words = similar_words[:10]
-
-    for s in similar_words:
-      # 各類似語とゴールとの類似度の比較
-      intention_list.append((s[0],model.similarity(goal,s[0])))
-    
-    intention_list.sort(key=lambda x: float(x[1]), reverse=True)
-    #print(intention_list)
-    
-    '''
-    print("\n単語\t" + goal + "との類似度")
-    for il in intention_list:
-      print(il[0] + "\t" + str(il[1]))
-    
-    print("=======================================================")
-    print("「" + intention_list[0][0] + "」")
-    '''
-    count = 0
-    resp_msgs = Tw.getList(A[0], " ")
-    exp_msgs = Tw.getList(A[0], intention_list[0][0])
-
-    while input_text != "さようなら。":
-      if count >= len(resp_msgs) or count >= len(exp_msgs):
-        output_msg = "他の話をしませんか。"
+      if len(input_words) > 1:
+        resp_msgs = Tw.getList(input_words[-1],input_words[-2])
       else:
-        if isinstance(resp_msgs, str):
-          resp_msg = resp_msgs
-        else:
-          resp_msg = resp_msgs[count]
-        if isinstance(resp_msgs, str):
-          exp_msg = exp_msgs
-        else:
-          exp_msg = exp_msgs[count]
-        output_msg = resp_msg + "\nそういえば、" + exp_msg
+        resp_msgs = Tw.getList(input_words[-1], "")
+      print("Got resp_msgs")
+
+      exp_msgs = Tw.getList(intention_words[0][0], input_words[-1])
+      print("Got exp_msgs")
+
+      #print(type(exp_msgs))
+      if isinstance(resp_msgs, str):
+        resp_msg = resp_msgs
+      else:
+        resp_msg = resp_msgs[count]
+      if isinstance(exp_msgs, str):
+        exp_msg = exp_msgs
+      else:
+        exp_msg = exp_msgs[count]
+      output_msg = resp_msg + "\nそういえば、" + exp_msg
       
       print("\nSystem >>")
       print(output_msg + "\n")
       f.write(output_msg + ";\n")
+    
+    except:
+      print("\nSystem >>\nそれに関しては詳しくないです。今度勉強します。")
+      f.write("それに関しては詳しくないです。今度勉強します。;\n")
 
-      input_text = input("You >>")
-      f.write(input_text + ",")
+
+    input_text = input("You >>")
+    f.write(input_text + ",")
       
-      old_A = A
-      A = Phrase.getNoun(input_text)
-      if A != None:
-        break
-      count = count + 1
+    input_words = Phrase.getNoun(input_text)
+    
+    # メモリに記憶
+    for word in input_words:
+      words_memory.append(word)
 
+    # メモリにある単語が5を超えると、最新5単語のみ残す
+    if len(words_memory) >= 5:
+      words_memory = words_memory[-5:]
 
+    # 終了コード
     if input_text == "さようなら。":
       print("\nSystem >>さようなら。")
       f.write("さようなら。;\n")
       break
-    
-    old_A = A
-    A = Phrase.getNoun(input_text)
-    if A == None:
-      A = old_A
-      
 
   f.close()
 

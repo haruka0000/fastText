@@ -4,11 +4,12 @@ def LogToHtml(file_name, html_name):
   f.close()
   
   lines = all_log.split(";\n")[1:]
-  
+  #print(lines) 
   talks = []
-  for l in lines:
+  for l in lines[:-1]:
     msg_dict = {}
     messages = l.split(",")
+    print(messages)
     msg_dict["You"] = messages[0].replace('\n', '<br>')
     msg_dict["System"] = messages[1].replace('\n', '<br>')
     talks.append(msg_dict)

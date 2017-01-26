@@ -35,7 +35,7 @@ def getNoun(s):
     else:
       input_nouns = list(nouns_dict.keys())[::-1]
   else:
-    input_nouns = None
+    input_nouns = []
   return input_nouns
 
 if __name__ == '__main__':
