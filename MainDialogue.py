@@ -28,7 +28,7 @@ def responce(file_name, log_name):
     intention_words = []
     print(words_memory)
     try:
-      intention_words =  WordCalc.intention_calc(model, words_memory)
+      intention_words =  WordCalc.intention_calc(model, input_words)
 
       if len(input_words) > 1:
         resp_msgs = Tw.getList(input_words[-1],input_words[-2])
