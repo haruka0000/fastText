@@ -93,12 +93,31 @@ def getReplies():
   one_set_replies = ";\n".join(list(set(replies))).replace("\n;\n",";").replace(";\n\n",";\n")
   return one_set_replies
 
+
+def delSameMsg():
+  f = open("replies.txt", "r")
+  texts = list(set(f.read().split(";\n")))
+  new_texts = []
+  for t in texts:
+    if t != '' and len(t) < 20:
+      new_texts.append(t)
+  f.close()
+
+  print(len(new_texts))
+  f = open("replies.txt", "w")
+  f.write(";\n".join(new_texts))
+  f.close 
+  
+
 if __name__ == "__main__":
   '''
   word1 = input("word 1 >>")
   word2 = input("word 2 >>")
   print(getList(word1, word2))
   '''
+
   f = open("replies.txt", "a")
   f.write(getReplies())
   f.close
+
+  delSameMsg()
