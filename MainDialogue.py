@@ -4,6 +4,7 @@ import Phrase
 from datetime import datetime
 import Html
 import WordCalc
+import Sentence
 
 global model
 
@@ -27,36 +28,47 @@ def responce(file_name, log_name):
   while True:
     intention_words = []
     print(words_memory)
+
     try:
       intention_words =  WordCalc.intention_calc(model, input_words)
+      has_word_count = input_words.count(input_words[-1])
 
-      if len(input_words) > 1:
-        resp_msgs = Tw.getList(input_words[-1],input_words[-2])
+      if has_word_count > 1:
+        try:
+          output_msg = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])[has_word_count-1]
+        except:
+          output_msg = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])[0]
       else:
-        resp_msgs = Tw.getList(input_words[-1], "")
-      print("Got resp_msgs")
+        output_msg = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])[0]
 
-      exp_msgs = Tw.getList(intention_words[0][0], input_words[-1])
-      print("Got exp_msgs")
-
-      #print(type(exp_msgs))
-      if isinstance(resp_msgs, str):
-        resp_msg = resp_msgs
-      else:
-        resp_msg = resp_msgs[count]
-      if isinstance(exp_msgs, str):
-        exp_msg = exp_msgs
-      else:
-        exp_msg = exp_msgs[count]
-      output_msg = resp_msg + "\nそういえば、" + exp_msg
-      
-      print("\nSystem >>")
-      print(output_msg + "\n")
-      f.write(output_msg + ";\n")
-    
     except:
-      print("\nSystem >>\nそれに関しては詳しくないです。今度勉強します。")
-      f.write("それに関しては詳しくないです。今度勉強します。;\n")
+      try:
+        if len(input_words) > 1:
+          resp_msgs = Tw.getList(input_words[-1],input_words[-2])
+        else:
+          resp_msgs = Tw.getList(input_words[-1], "")
+        print("Got resp_msgs")
+
+        exp_msgs = Tw.getList(intention_words[0][0], input_words[-1])
+        print("Got exp_msgs")
+
+        #print(type(exp_msgs))
+        if isinstance(resp_msgs, str):
+          resp_msg = resp_msgs
+        else:
+          resp_msg = resp_msgs[count]
+        if isinstance(exp_msgs, str):
+          exp_msg = exp_msgs
+        else:
+          exp_msg = exp_msgs[count]
+        output_msg = resp_msg + "\nそういえば、" + exp_msg
+
+      except:
+        output_msg = "それに関しては詳しくないです。今度勉強します。"
+
+    print("\nSystem >>")
+    print(output_msg + "\n")
+    f.write(output_msg + ";\n")
 
 
     input_text = input("You >>")

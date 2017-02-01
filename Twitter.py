@@ -116,7 +116,7 @@ if __name__ == "__main__":
   print(getList(word1, word2))
   '''
 
-  f = open("replies.txt", "a")
+  f = open("replies.txt", "w")
   f.write(getReplies())
   f.close
 

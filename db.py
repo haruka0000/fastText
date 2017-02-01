@@ -56,14 +56,20 @@ def pickUpNouns():
     for l in lines:
       w = l.split("\t")
       if "名詞" in w[3] and "記号" not in w[3]:
-        try:
-          sql = 'insert into nouns (noun, msg_id) values (?,?)'
-          data = (w[0], row[0])
-          c.execute(sql, data)
-          conn.commit()
-          print(w[0])
-        except:
-          print("ERROR")
+        distinct_sql = 'select distinct * from nouns where msg_id="%s"' % (row[0])
+        c.execute(distinct_sql)
+        dis_rows = c.fetchall
+        if dis_rows != []:
+          try:
+            sql = 'insert into nouns (noun, msg_id) values (?,?)'
+            data = (w[0], row[0])
+            c.execute(sql, data)
+            conn.commit()
+            print(w[0])
+          except:
+            print("ERROR")
+        else:
+          print("## 既に存在しています。")
     print(row[1])
   
   conn.close()
@@ -91,6 +97,18 @@ def deleteSigns():
 
   conn.close()
 
+
+def lengthTemplates():
+  conn = sqlite3.connect(dbname)
+  c = conn.cursor()
+
+  select_sql = 'select * from templates'
+  c.execute(select_sql)
+  rows = c.fetchall()
+
+  conn.close()
+  print(len(rows))
+
 if __name__=='__main__':
 
   f = open("replies.txt", "r")
@@ -101,3 +119,5 @@ if __name__=='__main__':
   pickUpNouns()
 
   deleteSigns()
+
+  lengthTemplates()

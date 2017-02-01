@@ -8,7 +8,7 @@ def getNouns():
   conn = sqlite3.connect(dbname)
   c = conn.cursor()
 
-  select_sql = 'select * from nouns'
+  select_sql = 'select distinct * from nouns'
   c.execute(select_sql)
   
   rows = c.fetchall()
@@ -171,14 +171,16 @@ def replaceNouns(model, word1, word2):
             except:
               print("## 置き換え済み")
       '''
-    if t_origin != tmp:
+    if t_origin != tmp or word1 in tmp or word2 in tmp:
       changed_msg.append(tmp)
-
+  
+  '''
   print("========================================================")
   for c in changed_msg:
     print(c)
-
-
+  '''
+  
+  return changed_msg
 
 
 if __name__=='__main__':
@@ -187,7 +189,7 @@ if __name__=='__main__':
   # 学習済みモデルのロード
   model = word2vec.Word2Vec.load_word2vec_format(file_name, binary=False)
  
-  word1 = "パソコン"
-  word2 = "ディスプレイ"
+  word1 = "井上麻里奈"
+  word2 = "声優"
 
   replaceNouns(model, word1, word2)
