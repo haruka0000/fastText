@@ -18,21 +18,34 @@ def responce(file_name, log_name):
   f.write("You,System;\n")
   f.write(input_text + ",")
 
+  input_words = []
   input_words = Phrase.getNoun(input_text)
+  
+  while input_words == []:
+    print("## ! ## 名詞を含む文章を再度入力してください")
+    input_text = input("You >>")
+    input_words = Phrase.getNoun(input_text)
 
+  '''
   words_memory = []
   for word in input_words:
     words_memory.append(word)
-    
+  '''
+
   count = 0
   while True:
     intention_words = []
-    print(words_memory)
 
     try:
+      print("[user]\t" + input_words[-1])
       intention_words =  WordCalc.intention_calc(model, input_words)
       has_word_count = input_words.count(input_words[-1])
+      print("[system]\t" + intention_words[0][0])
+    except:
+      print("## Error ")
 
+    try:
+      ### テンプレートから文作成 ###
       if has_word_count > 1:
         try:
           output_msg = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])[has_word_count-1]
@@ -42,6 +55,7 @@ def responce(file_name, log_name):
         output_msg = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])[0]
 
     except:
+      ### Twitterから文作成 ###
       try:
         if len(input_words) > 1:
           resp_msgs = Tw.getList(input_words[-1],input_words[-2])
@@ -75,7 +89,8 @@ def responce(file_name, log_name):
     f.write(input_text + ",")
       
     input_words = Phrase.getNoun(input_text)
-    
+   
+    '''
     # メモリに記憶
     for word in input_words:
       words_memory.append(word)
@@ -83,6 +98,7 @@ def responce(file_name, log_name):
     # メモリにある単語が5を超えると、最新5単語のみ残す
     if len(words_memory) >= 5:
       words_memory = words_memory[-5:]
+    '''
 
     # 終了コード
     if input_text == "さようなら。":

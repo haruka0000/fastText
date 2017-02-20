@@ -3,6 +3,10 @@ MODELS/
 Wikipedia_TEXT/
 fastText/
 TEXTS/
+LOG/log
+LOG/*.log
+LOG/design/old
+LOG/design/*.html
 twitter/secret.json
 secret.json
 proxy.json

@@ -40,10 +40,10 @@ def getText(model, word1, word2):
     try:
       if model.similarity(word1, dn[0]) > 0.5:
         similar_db_nouns.append(dn)
-        print(dn)
+        #print(dn)
     except:
-      print("モデルに登録されていない文字\t" + dn[0])
-
+      #print("モデルに登録されていない文字\t" + dn[0])
+      print("", end='')
   templates = []
 
   for sdn in similar_db_nouns:
@@ -58,7 +58,7 @@ def replaceNouns(model, word1, word2):
   words = result[0]
   texts = result[1]
 
-  print (texts)
+  #print (texts)
 
   m = MeCab.Tagger("-d /usr/lib/mecab/dic/mecab-ipadic-neologd -Ochasen")
 
@@ -89,7 +89,8 @@ def replaceNouns(model, word1, word2):
         w1_nouns_list = sorted(w1_nouns_list, key=lambda x: x[1], reverse=True)
         #print(w1_nouns_list)
       except:
-        print("## おそらく登録されていない名詞があります")
+        #print("## おそらく登録されていない名詞があります")
+        print("", end='')
   
       try:
         w2_nouns_list = []
@@ -98,7 +99,8 @@ def replaceNouns(model, word1, word2):
           w2_nouns_list.append([n, model.similarity(n, word2)])
         w2_nouns_list = sorted(w2_nouns_list, key=lambda x: x[1], reverse=True)
       except:
-        print("## おそらく登録されていない名詞があります")
+        #print("## おそらく登録されていない名詞があります")
+        print("", end='')
 
       t_list = []
       if len(w1_nouns_list) != 0:
@@ -141,9 +143,9 @@ def replaceNouns(model, word1, word2):
 
         tmp = "".join(t_list)
 
-        print("------------------------------------------------------------")
-        print([t_origin])
-        print([tmp])
+        #print("------------------------------------------------------------")
+        #print([t_origin])
+        #print([tmp])
 
       '''
       if len(w1_nouns_list) != 0:
