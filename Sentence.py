@@ -147,32 +147,6 @@ def replaceNouns(model, word1, word2):
         #print([t_origin])
         #print([tmp])
 
-      '''
-      if len(w1_nouns_list) != 0:
-        tmp.replace(w1_nouns_list[0][0], word1) # word1 と word1に一番似ている単語 を入れ替える
-
-        if w1_nouns_list[0][0] == w2_nouns_list[0][0]:
-          if len(w2_nouns_list) != 1:
-            tmp.replace(w2_nouns_list[1][0], word2) # word2 と word2に2番目に似ている単語 を入れ替える
-        else:
-          tmp.replace(w2_nouns_list[0][0], word2) # word2 と word2に一番似ている単語 を入れ替える
-
-        new_noun = None
-        print("\n" + t)
-
-        for n in nouns:
-          try:
-            new_noun = model.most_similar(positive=[word1,n], negative=[w1_nouns_list[0][0]], topn=10)[0][0]
-          except:
-            print("## おそらく登録されていない名詞があります")
-          if new_noun != None:
-            try:
-              tmp = tmp.replace(n, new_noun)
-              print(n + "\t" + new_noun)
-              print("#Changed " + tmp)
-            except:
-              print("## 置き換え済み")
-      '''
     if t_origin != tmp or word1 in tmp or word2 in tmp:
       changed_msg.append(tmp)
   

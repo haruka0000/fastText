@@ -5,6 +5,7 @@ from datetime import datetime
 import Html
 import WordCalc
 import Sentence
+import random
 
 global model
 
@@ -26,41 +27,40 @@ def responce(file_name, log_name):
     input_text = input("You >>")
     input_words = Phrase.getNoun(input_text)
 
-  '''
-  words_memory = []
-  for word in input_words:
-    words_memory.append(word)
-  '''
-
   count = 0
   while True:
     intention_words = []
 
     try:
       print("[user]\t" + input_words[-1])
+      try:
+        noun_log = open(log_name+".noun", 'a')
+        noun_log.write("user," + input_words[-1] + "\n")
+        noun_log.close()
+      except:
+        print("Log Error")
       intention_words =  WordCalc.intention_calc(model, input_words)
       has_word_count = input_words.count(input_words[-1])
       print("[system]\t" + intention_words[0][0])
+      try:
+        noun_log = open(log_name+".noun", 'a')
+        noun_log.write("system," + intention_words[0][0] + "\n")
+        noun_log.close()
+      except:
+        print("Log Error 2")
     except:
       print("## Error ")
 
     try:
       ### テンプレートから文作成 ###
-      if has_word_count > 1:
-        try:
-          output_msg = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])[has_word_count-1]
-        except:
-          output_msg = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])[0]
-      else:
-        output_msg = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])[0]
+      pre_output_msgs = Sentence.replaceNouns(model, input_words[-1], intention_words[0][0])
+      print(pre_output_msgs)
+      output_msg = pre_output_msgs[random.randint(0,len(pre_output_msgs))]
 
     except:
       ### Twitterから文作成 ###
       try:
-        if len(input_words) > 1:
-          resp_msgs = Tw.getList(input_words[-1],input_words[-2])
-        else:
-          resp_msgs = Tw.getList(input_words[-1], "")
+        resp_msgs = Tw.getList(input_words[-1], "")
         print("Got resp_msgs")
 
         exp_msgs = Tw.getList(intention_words[0][0], input_words[-1])

@@ -6,6 +6,8 @@ def intention_calc(model, array):
 
   similar_words = []
   pos_array = array
+  print(pos_array)
+  pos_array.append("クレジットカード")
 
   # しきい値を超える類似語を10個集める
   while len(similar_words) <= 10:
