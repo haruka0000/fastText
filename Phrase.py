@@ -21,13 +21,13 @@ def getNoun(s):
   for word,word_class in words_dict.items():
     if "名詞" in word_class:
       nouns_dict[word] = word_class
-  #print(nouns_dict)
+  print(nouns_dict)
   if nouns_dict != {}:
     proper_nouns_dict = {}
     for noun,noun_detail in nouns_dict.items():
       if "固有名詞" in noun_detail:
         proper_nouns_dict[noun] = noun_detail
-    #print(proper_nouns_dict)
+    print(proper_nouns_dict)
   
     input_nouns = []
     if proper_nouns_dict!= {}:
@@ -39,8 +39,9 @@ def getNoun(s):
   return input_nouns
 
 if __name__ == '__main__':
-  print(getNoun("井上麻里奈さんは実力と容姿を兼ね備えた優れた声優である。愛してやまない。"))
-  print(getNoun("彼女は実力と容姿を兼ね備えた優れた声優である。愛してやまない。"))
+  q = "本研究は話題の誘導に関する研究である。高橋が研究している。"
+  print(q)
+  print(getNoun(q))
 
 
 

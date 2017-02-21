@@ -24,7 +24,7 @@ def LogToHtml(file_name, html_name):
 
   output.write(head)
   for t in talks:
-    your_chat_frame = '<p class="chat-talk mytalk">\n\t<span class="talk-icon">\n\t\t<img src="icon/myicon.jpg" alt="myicon" width="XX" height="XX"/>\n\t</span>\n\t<span class="talk-content">%s</span>\n</p>' % (t["You"])
+    your_chat_frame = '<p class="chat-talk mytalk">\n\t<span class="talk-icon">\n\t\t<img src="icon/myicon.png" alt="myicon" width="XX" height="XX"/>\n\t</span>\n\t<span class="talk-content">%s</span>\n</p>' % (t["You"])
     output.write(your_chat_frame)
     system_chat_frame = '<p class="chat-talk">\n\t<span class="talk-icon">\n\t\t<img src="icon/targeticon.png" alt="tartgeticon" width="XX" height="XX"/>\n\t</span>\n\t<span class="talk-content">%s</span>\n</p>' % (t["System"])
     output.write(system_chat_frame)
